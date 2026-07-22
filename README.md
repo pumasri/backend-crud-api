@@ -1,5 +1,5 @@
 # Backend CRUD API
 
-## Architecture Write-up
+The cached Node.js API handled about 1,849 requests per second with an average latency of 53.57 ms, while the cached Go microservice handled about 14,361 requests per second with an average latency of 6.48 ms under the same 100-connection benchmark. 
 
-A team might choose to implement high-traffic microservices in Go while maintaining Node.js and Express for the rest of their business logic to achieve an optimal balance between extreme performance and high developer velocity. Go's compiled execution, minimal memory footprint, and lightweight concurrency model (goroutines) allow high-throughput endpoints to deliver low latency and handle intense concurrent traffic with lower CPU and RAM costs. Meanwhile, Node.js/Express excels at rapid feature iteration, rich API integrations, and maintaining domain business logic thanks to JavaScript's expressive ecosystem and rapid development workflow.
+A team might use Go for high-traffic microservices because it handles many requests faster and more efficiently. They can still use Node.js and Express for the rest of the application to speed up development and take advantage of the JavaScript ecosystem.
