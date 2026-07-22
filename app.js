@@ -422,6 +422,9 @@ app.post('/api/products', verifyToken, async (req, res) => {
             }
         });
 
+        cache.data = null;
+        cache.expiry = 0;
+
         res.status(201).json({
             success: true,
             insertedId: newProduct.ProductID,
@@ -453,6 +456,9 @@ app.put('/api/products/:id', verifyToken, async (req, res) => {
             }
         });
 
+        cache.data = null;
+        cache.expiry = 0;
+
         res.json({
             success: true,
             message: 'Product updated'
@@ -483,6 +489,9 @@ app.delete('/api/products/:id', verifyToken, async (req, res) => {
                 ProductID: parseInt(req.params.id)
             }
         });
+
+        cache.data = null;
+        cache.expiry = 0;
 
         res.json({
             success: true,
