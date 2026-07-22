@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  CategoryID   Int        @id @default(autoincrement())
+  CategoryName String?    @db.VarChar(255)
+  Description  String?    @db.VarChar(255)
+  products     products[]
+}
+
+model customers {
+  CustomerID   Int     @id @default(autoincrement())
+  CustomerName String? @db.VarChar(255)
+  ContactName  String? @db.VarChar(255)
+  Address      String? @db.VarChar(255)
+  City         String? @db.VarChar(255)
+  PostalCode   String? @db.VarChar(255)
+  Country      String? @db.VarChar(255)
+}
+
+model employees {
+  EmployeeID Int       @id @default(autoincrement())
+  LastName   String?   @db.VarChar(255)
+  FirstName  String?   @db.VarChar(255)
+  BirthDate  DateTime? @db.Date
+  Photo      String?   @db.VarChar(255)
+  Notes      String?   @db.Text
+}
+
+model products {
+  ProductID   Int          @id @default(autoincrement())
+  ProductName String?      @db.VarChar(255)
+  SupplierID  Int?
+  CategoryID  Int?
+  Unit        String?      @db.VarChar(255)
+  Price       Float?
+  orderitems  orderitems[]
+  categories  categories?  @relation(fields: [CategoryID], references: [CategoryID], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_1")
+  suppliers   suppliers?   @relation(fields: [SupplierID], references: [SupplierID], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_2")
+
+  @@index([CategoryID], map: "CategoryID")
+  @@index([SupplierID], map: "SupplierID")
+}
+
+model shippers {
+  ShipperID   Int     @id @default(autoincrement())
+  ShipperName String? @db.VarChar(255)
+  Phone       String? @db.VarChar(255)
+}
+
+model suppliers {
+  SupplierID   Int        @id @default(autoincrement())
+  SupplierName String?    @db.VarChar(255)
+  ContactName  String?    @db.VarChar(255)
+  Address      String?    @db.VarChar(255)
+  City         String?    @db.VarChar(255)
+  PostalCode   String?    @db.VarChar(255)
+  Country      String?    @db.VarChar(255)
+  Phone        String?    @db.VarChar(255)
+  products     products[]
+}
+
+model users {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique(map: "username") @db.VarChar(50)
+  password_hash String   @db.VarChar(255)
+  orders        orders[]
+}
+
+model orders {
+  OrderID     Int          @id @default(autoincrement())
+  OrderDate   DateTime     @default(now())
+  TotalAmount Decimal      @default(0.00) @db.Decimal(10, 2)
+  UserID      Int
+  items       orderitems[]
+  user        users        @relation(fields: [UserID], references: [id])
+
+  @@index([UserID], map: "orders_UserID_fkey")
+}
+
+model orderitems {
+  OrderItemID Int      @id @default(autoincrement())
+  OrderID     Int
+  ProductID   Int
+  Quantity    Int
+  Price       Decimal  @db.Decimal(10, 2)
+  order       orders   @relation(fields: [OrderID], references: [OrderID], onDelete: Cascade)
+  product     products @relation(fields: [ProductID], references: [ProductID])
+
+  @@index([OrderID], map: "orderitems_OrderID_fkey")
+  @@index([ProductID], map: "orderitems_ProductID_fkey")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model order_details_backup {
+  OrderDetailID Int  @default(0)
+  OrderID       Int?
+  ProductID     Int?
+  Quantity      Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model orders_backup {
+  OrderID    Int       @default(0)
+  CustomerID Int?
+  EmployeeID Int?
+  OrderDate  DateTime? @db.Date
+  ShipperID  Int?
+
+  @@ignore
+}

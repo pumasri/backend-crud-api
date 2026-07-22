@@ -1,0 +1,13 @@
+DELETE FROM `orders`;
+
+ALTER TABLE `orders` ADD CONSTRAINT `orders_UserID_fkey`
+FOREIGN KEY (`UserID`) REFERENCES `users`(`id`)
+ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `orderitems` ADD CONSTRAINT `orderitems_OrderID_fkey`
+FOREIGN KEY (`OrderID`) REFERENCES `orders`(`OrderID`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `orderitems` ADD CONSTRAINT `orderitems_ProductID_fkey`
+FOREIGN KEY (`ProductID`) REFERENCES `products`(`ProductID`)
+ON DELETE RESTRICT ON UPDATE CASCADE;
